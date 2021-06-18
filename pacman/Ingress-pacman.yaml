@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pacman
+  labels:
+    app: pacman
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  rules:
+  - host: pacman.app.yassinemaachi.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pacman
+            port:
+              name: http
+  tls:
+  - hosts:
+    - pacman.app.yassinemaachi.com
+    secretName: pacman.app.yassinemaachi.com-crt
