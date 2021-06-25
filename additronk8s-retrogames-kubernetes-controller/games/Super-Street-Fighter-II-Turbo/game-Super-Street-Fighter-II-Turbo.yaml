@@ -1,0 +1,38 @@
+apiVersion: retro.sparkfabrik.com/v1
+kind: Game
+metadata:
+  name: sf2turbo
+  namespace: games
+spec:
+  name: "SF2TURBO"
+  zipUrl: "https://dosgames.com/files/DOSBOX_SSF2T.ZIP"
+  dir: "."
+  exe: "SF2TURBO.EXE"
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sf2turbo
+  namespace: games
+  labels:
+    app: sf2turbo
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: sf2turbo.games.yassinemaachi.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sf2turbo
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - sf2turbo.games.yassinemaachi.com
+    secretName: sf2turbo.games.yassinemaachi.com-crt
