@@ -1,0 +1,38 @@
+apiVersion: retro.sparkfabrik.com/v1
+kind: Game
+metadata:
+  name: mario-luigi
+  namespace: games
+spec:
+  name: "SF2TURBO"
+  zipUrl: "https://dosgames.com/files/MARIO.ZIP"
+  dir: "."
+  exe: "MARIO.EXE"
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mario-luigi
+  namespace: games
+  labels:
+    app: mario-luigi
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mario-luigi.games.yassinemaachi.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mario-luigi
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - mario-luigi.games.yassinemaachi.com
+    secretName: mario-luigi.games.yassinemaachi.com-crt
